@@ -1,0 +1,121 @@
+ext {
+    DAGGER_VERSION = "2.17"
+    SUPPORT_LIBRARY_VERSION = "28.0.0-rc01"
+    CONSTRAINT_LAYOUT_VERSION = "1.1.2"
+    JUNIT_VERSION = "4.12"
+    ESPRESSO_VERSION = "3.0.2"
+    TEST_RUNNER_VERSION = "1.0.2"
+    TIMBER_VERSION = "4.7.1"
+    MOSHI_VERSION = "1.5.0"
+    JODA_VERSION = "2.9.9"
+    FABRIC_VERSION = "2.9.5@aar"
+    ARCH_VERSION = "1.1.1"
+}
+
+def dependencyGroup(Closure closure) {
+    closure.delegate = dependencies
+    return closure
+}
+
+def fileTree = dependencyGroup {
+    implementation fileTree(include: ["*.jar"], dir: "libs")
+}
+
+def androidDependencies = dependencyGroup {
+    implementation "com.android.support:appcompat-v7:$SUPPORT_LIBRARY_VERSION"
+    implementation "com.android.support:design:$SUPPORT_LIBRARY_VERSION"
+    implementation "com.android.support.constraint:constraint-layout:$CONSTRAINT_LAYOUT_VERSION"
+    implementation 'com.google.android.gms:play-services-maps:+'
+    implementation "androidx.appcompat:appcompat:1.1.0-alpha01"
+}
+
+def testingDependencies = dependencyGroup {
+    testImplementation "junit:junit:$JUNIT_VERSION"
+    androidTestImplementation "com.android.support.test:runner:$TEST_RUNNER_VERSION"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$ESPRESSO_VERSION"
+}
+
+def logging = dependencyGroup {
+    implementation "com.jakewharton.timber:timber:$TIMBER_VERSION"
+}
+
+def jsonDependencies = dependencyGroup {
+    implementation "com.squareup.moshi:moshi:$MOSHI_VERSION"
+}
+
+def networkDependencies = dependencyGroup {
+    implementation group: 'com.squareup.retrofit2', name: 'converter-gson', version: '2.4.0'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.5'
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.11.0'
+    implementation group: 'com.squareup.okhttp3', name: 'logging-interceptor', version: '3.11.0'
+    implementation(group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.4.0') {
+        exclude module: 'okhttp'
+    }
+}
+
+def timeDependencies = dependencyGroup {
+    implementation "net.danlew:android.joda:$JODA_VERSION"
+}
+
+def fabricDependencies = dependencyGroup {
+    implementation("com.crashlytics.sdk.android:crashlytics:$FABRIC_VERSION") {
+        transitive = true;
+    }
+}
+
+def architecture = dependencyGroup {
+    implementation "android.arch.lifecycle:extensions:$ARCH_VERSION"
+    annotationProcessor "android.arch.lifecycle:compiler:$ARCH_VERSION"
+    implementation "android.arch.lifecycle:runtime:$ARCH_VERSION"
+    implementation "android.arch.lifecycle:reactivestreams:$ARCH_VERSION"
+    testImplementation "android.arch.core:core-testing:$ARCH_VERSION"
+}
+
+def kotlinCoroutines = dependencyGroup {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.10"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.0.1"
+    implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
+}
+
+def kotlin = dependencyGroup {
+    implementation "androidx.core:core-ktx:+"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.0.0-rc01"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+
+def koinDependencies = dependencyGroup {
+    // Koin for Android
+    implementation "org.koin:koin-android:2.0.1"
+    // or Koin for Lifecycle scoping
+    implementation "org.koin:koin-android-scope:2.0.1"
+    // or Koin for Android Architecture ViewModel
+    implementation "org.koin:koin-android-viewmodel:2.0.1"
+}
+
+dependencies {
+
+    fileTree()
+
+    timeDependencies()
+
+    androidDependencies()
+
+    testingDependencies()
+
+    jsonDependencies()
+
+    fabricDependencies()
+
+    logging()
+
+    architecture()
+
+    networkDependencies()
+
+    kotlinCoroutines()
+
+    kotlin()
+
+    koinDependencies()
+
+}
